@@ -40,6 +40,51 @@ cursor.execute("USE BoilingPoint_EMS")
 cursor.execute("CREATE TABLE Employee_Database (EmpID INT(7) PRIMARY KEY, Name VARCHAR(100), \
     Email TEXT(100), PhoneNum INT(11), Address TEXT(1000), Position TEXT(100), Pay FLOAT(50), TipPerc INT(200))")
 '''
+c = connection.cursor()
+c.execute("USE BoilingPoint_EMS")
+#c.execute("ALTER TABLE Employee_Database MODIFY PhoneNum VARCHAR(20);")
+
+# Add employee function
+def add_emp():
+    while True:
+        print("{:>60}".format("===> Add Employee Record <==="))
+        EmpID = int(input("Enter Employee ID: "))
+        Name = input("Enter Employee Name: ")
+        Email = input("Enter Employee Email: ")
+        PhoneNum = input("Enter Employee Phone number: ")
+        Address = input("Enter Employee Address: ")
+        Position = input("Enter Employee Position: ")
+        Pay = float(input("Enter Employee Pay: "))
+        TipPerc = int(input("Enter Employee Tip%: "))
+
+        # Display written information
+        print("\nReview the information you entered:")
+        print(f"ID: {EmpID}")
+        print(f"Name: {Name}")
+        print(f"Email: {Email}")
+        print(f"Phone Number: {PhoneNum}")
+        print(f"Address: {Address}")
+        print(f"Position: {Position}")
+        print(f"Pay: {Pay}")
+        print(f"Tip%: {TipPerc}")
+
+        # Ask user to confirm information is correct
+        choice = input("\nIs the information correct? (yes to confirm, no to edit): ").strip().lower()
+        if choice == 'yes':
+            print("Information confirmed. Adding employee...")
+            # Inserting employee data
+            data = (EmpID, Name, Email, PhoneNum, Address, Position, Pay, TipPerc)
+            sql = 'INSERT INTO employee_database (EmpID, Name, Email, PhoneNum, Address, Position, Pay, TipPerc) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)'
+            try:
+                c.execute(sql, data)
+                connection.commit()
+                print("Successfully Added Employee Record")
+            except mysql.connector.Error as err:
+                print(f"Error: {err}")
+            break
+        elif choice == 'no':
+            print("Let's try again.")
+            continue
 
 # Creating a menu to interact with the management system
 def menu():
@@ -57,6 +102,7 @@ def menu():
     if ans == '1':
         system("cls")
         # Call add function
+        add_emp()
     elif ans == '2':
         system("cls")
         # Call display function
