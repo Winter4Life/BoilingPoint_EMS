@@ -85,7 +85,28 @@ def add_emp():
         elif choice == 'no':
             print("Let's try again.")
             continue
-
+        
+# Display employee function
+def display_emp():
+    print("{:>60}".format("===> Display Employee Record <==="))
+    # Selecting all rows from database table
+    sql = 'SELECT * FROM employee_database'
+    c = connection.cursor()
+    c.execute(sql)
+    
+    # Fetching
+    table = c.fetchall()
+    for record in table:
+        print("Employee ID:", record[0])
+        print("Employee Name:", record[1])
+        print("Employee Email:", record[2])
+        print("Employee Phone Number:", record[3])
+        print("Employee Address:", record[4])
+        print("Employee Position:", record[5])
+        print("Employee Pay:", record[6])
+        print("Employee Tip%:", record[7])
+        print("\n")
+        
 # Creating a menu to interact with the management system
 def menu():
     system("cls")
@@ -106,6 +127,7 @@ def menu():
     elif ans == '2':
         system("cls")
         # Call display function
+        display_emp()
     elif ans == '3':
         system("cls")
         # Call update function
