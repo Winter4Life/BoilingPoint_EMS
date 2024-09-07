@@ -107,6 +107,64 @@ def display_emp():
         print("Employee Tip%:", record[7])
         print("\n")
         
+# Update employee record function
+def update_emp():
+    print("{:>60}".format("===> Update Employee Record <==="))
+    # Asking for employee ID or Name 
+    emp = input("Enter employee ID or employee Name")
+    if emp.isdigit():
+        empID = int(emp)
+        sql = "SELECT * FROM employee_database WHERE EmpID = %s"
+    elif not emp.isdigit():
+        empName = emp
+        sql = "SELECT * FROM employee_database WHERE Name = %s"
+    else:
+        print("No employee found with that ID or Name.")
+        return
+        
+    print("\n")
+    print("Choose the field to update:")
+    print("1. Name")
+    print("2. Email")
+    print("3. Phone Number")
+    print("4. Address")
+    print("5. Position")
+    print("6. Pay")
+    print("7. Tip Percentage")
+    choice = input("Enter the number of the field you want to update: ")
+
+    # Initialize an update query and execute based on the choice
+    if choice == '1':
+        data = input("Enter new Name: ")
+        sql = "UPDATE employee_database SET Name = %s WHERE EmpID = %s" if emp.isdigit() else "UPDATE employee_database SET Name = %s WHERE Name = %s"
+    elif choice == '2':
+        data = input("Enter new Email: ")
+        sql = "UPDATE employee_database SET Email = %s WHERE EmpID = %s" if emp.isdigit() else "UPDATE employee_database SET Email = %s WHERE Name = %s"
+    elif choice == '3':
+        data = input("Enter new Phone Number: ")
+        sql = "UPDATE employee_database SET PhoneNum = %s WHERE EmpID = %s" if emp.isdigit() else "UPDATE employee_database SET PhoneNum = %s WHERE Name = %s"
+    elif choice == '4':
+        data = input("Enter new Address: ")
+        sql = "UPDATE employee_database SET Address = %s WHERE EmpID = %s" if emp.isdigit() else "UPDATE employee_database SET Address = %s WHERE Name = %s"
+    elif choice == '5':
+        data = input("Enter new Position: ")
+        sql = "UPDATE employee_database SET Position = %s WHERE EmpID = %s" if emp.isdigit() else "UPDATE employee_database SET Position = %s WHERE Name = %s"
+    elif choice == '6':
+        data = input("Enter new Pay: ")
+        sql = "UPDATE employee_database SET Pay = %s WHERE EmpID = %s" if emp.isdigit() else "UPDATE employee_database SET Pay = %s WHERE Name = %s"
+    elif choice == '7':
+        data = input("Enter new Tip Percentage: ")
+        sql = "UPDATE employee_database SET TipPerc = %s WHERE EmpID = %s" if emp.isdigit() else "UPDATE employee_database SET TipPerc = %s WHERE Name = %s"
+    else:
+        print("Invalid choice. Try again.")
+        return
+
+    # UpdTING employee record with new data
+    c.execute(sql, (data, empID if emp.isdigit() else empName))
+    connection.commit()
+    
+    print("Employee record updated successfully.")
+    
 # Creating a menu to interact with the management system
 def menu():
     system("cls")
@@ -131,6 +189,7 @@ def menu():
     elif ans == '3':
         system("cls")
         # Call update function
+        update_emp()
     elif ans == '4':
         system("cls")
         # Call delete function
