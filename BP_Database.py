@@ -111,7 +111,7 @@ def display_emp():
 def update_emp():
     print("{:>60}".format("===> Update Employee Record <==="))
     # Asking for employee ID or Name 
-    emp = input("Enter employee ID or employee Name")
+    emp = input("Enter employee ID or employee Name: ")
     if emp.isdigit():
         empID = int(emp)
         sql = "SELECT * FROM employee_database WHERE EmpID = %s"
@@ -159,11 +159,36 @@ def update_emp():
         print("Invalid choice. Try again.")
         return
 
-    # UpdTING employee record with new data
+    # Updating employee record with new data
     c.execute(sql, (data, empID if emp.isdigit() else empName))
     connection.commit()
     
     print("Employee record updated successfully.")
+    
+# Delete employee function
+def delete_emp():
+    print("{:>60}".format("===> Update Employee Record <==="))
+    # Asking for employee ID or Name 
+    emp = input("Enter employee ID or employee Name: ")
+    if emp.isdigit() == True:
+        empID = int(emp)
+        sql = "DELETE FROM employee_database WHERE EmpID = %s"
+        # Deleting employee record
+        c.execute(sql, (empID,))
+        connection.commit()
+    
+        print("Employee record updated successfully.")
+    elif not emp.isdigit() == True:
+        empName = emp
+        sql = "DELETE FROM employee_database WHERE Name = %s"
+        # Deleting employee record
+        c.execute(sql, (empName,))
+        connection.commit()
+    
+        print("Employee record updated successfully.")
+    else:
+        print("No employee found with that ID or Name.")
+        return
     
 # Creating a menu to interact with the management system
 def menu():
@@ -193,6 +218,7 @@ def menu():
     elif ans == '4':
         system("cls")
         # Call delete function
+        delete_emp()
     elif ans == '5':
         system("cls")
         # Call search function
