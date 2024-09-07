@@ -167,7 +167,7 @@ def update_emp():
     
 # Delete employee function
 def delete_emp():
-    print("{:>60}".format("===> Update Employee Record <==="))
+    print("{:>60}".format("===> Delete Employee Record <==="))
     # Asking for employee ID or Name 
     emp = input("Enter employee ID or employee Name: ")
     if emp.isdigit() == True:
@@ -177,7 +177,7 @@ def delete_emp():
         c.execute(sql, (empID,))
         connection.commit()
     
-        print("Employee record updated successfully.")
+        print("Employee record deleted successfully.")
     elif not emp.isdigit() == True:
         empName = emp
         sql = "DELETE FROM employee_database WHERE Name = %s"
@@ -185,10 +185,56 @@ def delete_emp():
         c.execute(sql, (empName,))
         connection.commit()
     
-        print("Employee record updated successfully.")
+        print("Employee record deleted successfully.")
     else:
         print("No employee found with that ID or Name.")
         return
+    
+# Search employee function
+def search_emp():
+    print("{:>60}".format("===> Search Employee Record <==="))
+    # Asking for employee ID or Name
+    emp = input("Enter employee ID or employee Name: ")
+    if emp.isdigit() == True:
+        empID = int(emp)
+        sql = "SELECT * FROM employee_database Where empID = %s"
+        c = connection.cursor()
+        c.execute(sql, (empID,))
+        
+        # Fetching
+        table = c.fetchall()
+        for record in table:
+            print("Employee ID:", record[0])
+            print("Employee Name:", record[1])
+            print("Employee Email:", record[2])
+            print("Employee Phone Number:", record[3])
+            print("Employee Address:", record[4])
+            print("Employee Position:", record[5])
+            print("Employee Pay:", record[6])
+            print("Employee Tip%:", record[7])
+            print("\n")
+
+    elif not emp.isdigit() == True:
+        empName = emp
+        sql = "SELECT * FROM employee_database Where empName = %s"
+        c = connection.cursor()
+        c.execute(sql, (empName,))
+        
+        # Fetching
+        table = c.fetchall()
+        for record in table:
+            print("Employee ID:", record[0])
+            print("Employee Name:", record[1])
+            print("Employee Email:", record[2])
+            print("Employee Phone Number:", record[3])
+            print("Employee Address:", record[4])
+            print("Employee Position:", record[5])
+            print("Employee Pay:", record[6])
+            print("Employee Tip%:", record[7])
+            print("\n")
+    else:
+        print("No employee found with that ID or Name.")
+        return 
     
 # Creating a menu to interact with the management system
 def menu():
@@ -222,6 +268,7 @@ def menu():
     elif ans == '5':
         system("cls")
         # Call search function
+        search_emp()
     elif ans == '6':
         print("Exiting the program")
         sys.exit()  # Gracefully exit the program
