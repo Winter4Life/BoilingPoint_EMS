@@ -79,6 +79,7 @@ def add_emp():
                 c.execute(sql, data)
                 connection.commit()
                 print("Successfully Added Employee Record")
+                menu()
             except mysql.connector.Error as err:
                 print(f"Error: {err}")
             break
@@ -112,116 +113,143 @@ def update_emp():
     print("{:>60}".format("===> Update Employee Record <==="))
     # Asking for employee ID or Name 
     emp = input("Enter employee ID or employee Name: ")
+    
     if emp.isdigit():
         empID = int(emp)
         sql = "SELECT * FROM employee_database WHERE EmpID = %s"
-    elif not emp.isdigit():
+        c.execute(sql, (empID,))
+    else:
         empName = emp
         sql = "SELECT * FROM employee_database WHERE Name = %s"
-    else:
-        print("No employee found with that ID or Name.")
-        return
+        c.execute(sql, (empName,))
         
-    print("\n")
-    print("Choose the field to update:")
-    print("1. Name")
-    print("2. Email")
-    print("3. Phone Number")
-    print("4. Address")
-    print("5. Position")
-    print("6. Pay")
-    print("7. Tip Percentage")
-    choice = input("Enter the number of the field you want to update: ")
+    employee = c.fetchone()  # This fetches one matching record, or None if no match
 
-    # Initialize an update query and execute based on the choice
-    if choice == '1':
-        data = input("Enter new Name: ")
-        sql = "UPDATE employee_database SET Name = %s WHERE EmpID = %s" if emp.isdigit() else "UPDATE employee_database SET Name = %s WHERE Name = %s"
-    elif choice == '2':
-        data = input("Enter new Email: ")
-        sql = "UPDATE employee_database SET Email = %s WHERE EmpID = %s" if emp.isdigit() else "UPDATE employee_database SET Email = %s WHERE Name = %s"
-    elif choice == '3':
-        data = input("Enter new Phone Number: ")
-        sql = "UPDATE employee_database SET PhoneNum = %s WHERE EmpID = %s" if emp.isdigit() else "UPDATE employee_database SET PhoneNum = %s WHERE Name = %s"
-    elif choice == '4':
-        data = input("Enter new Address: ")
-        sql = "UPDATE employee_database SET Address = %s WHERE EmpID = %s" if emp.isdigit() else "UPDATE employee_database SET Address = %s WHERE Name = %s"
-    elif choice == '5':
-        data = input("Enter new Position: ")
-        sql = "UPDATE employee_database SET Position = %s WHERE EmpID = %s" if emp.isdigit() else "UPDATE employee_database SET Position = %s WHERE Name = %s"
-    elif choice == '6':
-        data = input("Enter new Pay: ")
-        sql = "UPDATE employee_database SET Pay = %s WHERE EmpID = %s" if emp.isdigit() else "UPDATE employee_database SET Pay = %s WHERE Name = %s"
-    elif choice == '7':
-        data = input("Enter new Tip Percentage: ")
-        sql = "UPDATE employee_database SET TipPerc = %s WHERE EmpID = %s" if emp.isdigit() else "UPDATE employee_database SET TipPerc = %s WHERE Name = %s"
-    else:
-        print("Invalid choice. Try again.")
-        return
+    # Check if employee was found
+    if employee:
+        while True:
+            print("\n")
+            print("Choose the field to update:")
+            print("1. Name")
+            print("2. Email")
+            print("3. Phone Number")
+            print("4. Address")
+            print("5. Position")
+            print("6. Pay")
+            print("7. Tip Percentage")
+            choice = input("Enter the number of the field you want to update: ")
 
-    # Updating employee record with new data
-    c.execute(sql, (data, empID if emp.isdigit() else empName))
-    connection.commit()
+            # Initialize an update query and execute based on the choice
+            if choice == '1':
+                data = input("Enter new Name: ")
+                sql = "UPDATE employee_database SET Name = %s WHERE EmpID = %s" if emp.isdigit() else "UPDATE employee_database SET Name = %s WHERE Name = %s"
+                break
+            elif choice == '2':
+                data = input("Enter new Email: ")
+                sql = "UPDATE employee_database SET Email = %s WHERE EmpID = %s" if emp.isdigit() else "UPDATE employee_database SET Email = %s WHERE Name = %s"
+                break
+            elif choice == '3':
+                data = input("Enter new Phone Number: ")
+                sql = "UPDATE employee_database SET PhoneNum = %s WHERE EmpID = %s" if emp.isdigit() else "UPDATE employee_database SET PhoneNum = %s WHERE Name = %s"
+                break
+            elif choice == '4':
+                data = input("Enter new Address: ")
+                sql = "UPDATE employee_database SET Address = %s WHERE EmpID = %s" if emp.isdigit() else "UPDATE employee_database SET Address = %s WHERE Name = %s"
+                break
+            elif choice == '5':
+                data = input("Enter new Position: ")
+                sql = "UPDATE employee_database SET Position = %s WHERE EmpID = %s" if emp.isdigit() else "UPDATE employee_database SET Position = %s WHERE Name = %s"
+                break
+            elif choice == '6':
+                data = input("Enter new Pay: ")
+                sql = "UPDATE employee_database SET Pay = %s WHERE EmpID = %s" if emp.isdigit() else "UPDATE employee_database SET Pay = %s WHERE Name = %s"
+                break
+            elif choice == '7':
+                data = input("Enter new Tip Percentage: ")
+                sql = "UPDATE employee_database SET TipPerc = %s WHERE EmpID = %s" if emp.isdigit() else "UPDATE employee_database SET TipPerc = %s WHERE Name = %s"
+                break
+            else:
+                print("Unavailable choice, choose 1-7 only")
+     
+        # Updating employee record with new data
+        c.execute(sql, (data, empID if emp.isdigit() else empName))
+        connection.commit()
     
-    print("Employee record updated successfully.")
+        print("Employee record updated successfully.")
+            
+    else:
+        print("No employee found with that ID or Name. Press 'enter' to try again")
+        pr = input()
+        update_emp()
+        
     
 # Delete employee function
 def delete_emp():
     print("{:>60}".format("===> Delete Employee Record <==="))
     # Asking for employee ID or Name 
     emp = input("Enter employee ID or employee Name: ")
-    if emp.isdigit() == True:
+    if emp.isdigit():
         empID = int(emp)
-        sql = "DELETE FROM employee_database WHERE EmpID = %s"
-        # Deleting employee record
+        sql = "SELECT * FROM employee_database WHERE EmpID = %s"
         c.execute(sql, (empID,))
-        connection.commit()
-    
-        print("Employee record deleted successfully.")
-    elif not emp.isdigit() == True:
+    else:
         empName = emp
-        sql = "DELETE FROM employee_database WHERE Name = %s"
-        # Deleting employee record
+        sql = "SELECT * FROM employee_database WHERE Name = %s"
         c.execute(sql, (empName,))
-        connection.commit()
-    
+        
+    employee = c.fetchone()  # This fetches one matching record, or None if no match
+
+    # Check if employee was found
+    if employee:
+        if emp.isdigit():
+                sql = "DELETE FROM employee_database WHERE EmpID = %s"
+                c.execute(sql, (empID,))
+        else:
+            sql = "DELETE FROM employee_database WHERE Name = %s"
+            c.execute(sql, (empName,))
+        
         print("Employee record deleted successfully.")
     else:
-        print("No employee found with that ID or Name.")
-        return
-    
+        print("No employee found with that ID or Name. Press 'enter' to try again")
+        pr = input()
+        delete_emp()
+            
+'''
+what is user id or name
+if user id is digit
+emp ID = int(emp)
+search for employee
+if employee is found, execute
+else user no exist
+
+what is user ID or Name
+Search in SQL, if true
+if user ifs
+else
+
+
+'''
 # Search employee function
 def search_emp():
     print("{:>60}".format("===> Search Employee Record <==="))
     # Asking for employee ID or Name
     emp = input("Enter employee ID or employee Name: ")
-    if emp.isdigit() == True:
+    
+    if emp.isdigit():
         empID = int(emp)
-        sql = "SELECT * FROM employee_database Where empID = %s"
-        c = connection.cursor()
+        sql = "SELECT * FROM employee_database WHERE EmpID = %s"
         c.execute(sql, (empID,))
         
-        # Fetching
-        table = c.fetchall()
-        for record in table:
-            print("Employee ID:", record[0])
-            print("Employee Name:", record[1])
-            print("Employee Email:", record[2])
-            print("Employee Phone Number:", record[3])
-            print("Employee Address:", record[4])
-            print("Employee Position:", record[5])
-            print("Employee Pay:", record[6])
-            print("Employee Tip%:", record[7])
-            print("\n")
-
-    elif not emp.isdigit() == True:
+    else:
         empName = emp
-        sql = "SELECT * FROM employee_database Where empName = %s"
-        c = connection.cursor()
+        sql = "SELECT * FROM employee_database WHERE Name = %s"
         c.execute(sql, (empName,))
-        
-        # Fetching
-        table = c.fetchall()
+          
+    # Fetching the data
+    table = c.fetchall()
+    
+    # Check if employee is found
+    if table:
         for record in table:
             print("Employee ID:", record[0])
             print("Employee Name:", record[1])
@@ -233,8 +261,10 @@ def search_emp():
             print("Employee Tip%:", record[7])
             print("\n")
     else:
-        print("No employee found with that ID or Name.")
-        return 
+        print("No employee found with that ID or Name. Press 'enter' to try again")
+        pr = input()
+        search_emp()
+
     
 # Creating a menu to interact with the management system
 def menu():
@@ -273,8 +303,11 @@ def menu():
         print("Exiting the program")
         sys.exit()  # Gracefully exit the program
     else:
-        print("Unavailable option, try again")
+        print("Unavailable option, press 'enter' on the keyboard to try again")
+        pr = input()
+        menu()
      
 # Calling menu
 if __name__ == "__main__":
     menu()
+    
