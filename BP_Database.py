@@ -123,7 +123,7 @@ def update_emp():
         sql = "SELECT * FROM employee_database WHERE Name = %s"
         c.execute(sql, (empName,))
         
-    employee = c.fetchone()  # This fetches one matching record, or None if no match
+    employee = c.fetchone()  
 
     # Check if employee was found
     if employee:
@@ -197,7 +197,7 @@ def delete_emp():
         sql = "SELECT * FROM employee_database WHERE Name = %s"
         c.execute(sql, (empName,))
         
-    employee = c.fetchone()  # This fetches one matching record, or None if no match
+    employee = c.fetchone()  
 
     # Check if employee was found
     if employee:
