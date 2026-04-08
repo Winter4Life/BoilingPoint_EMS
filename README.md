@@ -1,4 +1,4 @@
-# BoilingPoint Employee Management System
+# Employee Management System
 
 A command-line Employee Management System (EMS) built with Python and MySQL, designed to manage employee records for a restaurant or food service business.
 
